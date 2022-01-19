@@ -7,16 +7,16 @@ lives = 5
 player_lives = 5
 
 
-blue_ghosts_num = 2
+pink_ghosts_num = 2
 red_ghosts_num = 1
-green_ghosts_num = 0
 orange_ghosts_num = 0
+blue_ghosts_num = 0
 apples_rate = 0
 
 
 default_level = object()
 def load_from_file(file='stats.csv', level=default_level):
-    global blue_ghosts_num, red_ghosts_num, green_ghosts_num, orange_ghosts_num, this_level
+    global pink_ghosts_num, red_ghosts_num, orange_ghosts_num, blue_ghosts_num, this_level
 
     if level is default_level:
         level = this_level
@@ -31,7 +31,7 @@ def load_from_file(file='stats.csv', level=default_level):
         for i in range(level):
             row = next(csv_reader)
 
-        blue_ghosts_num = int(row[0])
+        pink_ghosts_num = int(row[0])
         red_ghosts_num = int(row[1])
-        green_ghosts_num = int(row[2])
-        orange_ghosts_num = int(row[3])
+        orange_ghosts_num = int(row[2])
+        blue_ghosts_num = int(row[3])

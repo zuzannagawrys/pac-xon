@@ -9,7 +9,6 @@ import tilemap_objects
 
 
 ID_LIST = [11, 12, 13, 14]
-global thread_1, thread_2, thread_3
 
 
 
@@ -45,12 +44,11 @@ def control_fruit():
 
 
 def start_fruit_thread():
-    global thread_1, thread_2, thread_3
-    thread_1 = threading.Thread(target=control_fruit, daemon = True)
+    thread_1 = threading.Thread(target=control_fruit, daemon=True)
     thread_1.start()
-    thread_2 = threading.Thread(target=control_fruit, daemon = True)
+    thread_2 = threading.Thread(target=control_fruit, daemon=True)
     thread_2.start()
-    thread_3 = threading.Thread(target=control_fruit, daemon = True)
+    thread_3 = threading.Thread(target=control_fruit, daemon=True)
     thread_3.start()
 
 
@@ -62,23 +60,30 @@ def fruit_action(id):
 
 def control_action(id):
     if id == 11:
-        thread_4 = threading.Thread(target=tilemap_objects.set_pacman_speed(3),args=(id,))
+        thread_4 = threading.Thread(target=tilemap_objects.set_pacman_speed, args=(3,))
+        thread_4.start()
+        thread_4.join()
+        time.sleep(5)
+        thread_4 = threading.Thread(target=tilemap_objects.set_pacman_speed, args=(6,))
         thread_4.start()
         thread_4.join()
     if id == 12:
-        thread_5 = threading.Thread(target=tilemap_objects.set_pacman_speed(8),args=(id,))
+        thread_5 = threading.Thread(target=tilemap_objects.set_pacman_speed, args=(8,))
+        thread_5.start()
+        thread_5.join()
+        time.sleep(5)
+        thread_5 = threading.Thread(target=tilemap_objects.set_pacman_speed, args=(6,))
         thread_5.start()
         thread_5.join()
     if id == 13:
-        thread_6 = threading.Thread(tilemap_objects.set_ghost_speed(0),args=(id,))
-        thread_6.start()
-        thread_6.join()
+        tilemap_objects.set_ghost_speed_0()
+        time.sleep(5)
+        tilemap_objects.set_normal_ghost_speed_0()
     if id == 14:
-        thread_7 = threading.Thread(tilemap_objects.set_ghost_speed(1),args=(id,))
+        thread_7 = threading.Thread(target=tilemap_objects.set_ghost_speed,args=(1,))
         thread_7.start()
         thread_7.join()
-
-    time.sleep(5)
-
-    tilemap_objects.set_pacman_speed(6)
-    tilemap_objects.set_ghost_speed(3)
+        time.sleep(5)
+        thread_7 = threading.Thread(target=tilemap_objects.set_normal_ghost_speed)
+        thread_7.start()
+        thread_7.join()

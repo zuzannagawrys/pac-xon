@@ -5,12 +5,11 @@ import stats
 import time
 import tilemap
 import tilemap_objects
-import not_moving_objects
 
 
 done = False
 f = "default_tile_map.txt"
-
+gameover=False
 
 def level_up():
     stats.this_level += 1
@@ -28,27 +27,32 @@ def wait_for_keypress():
 
 
 def game_over():
-    not_moving_objects.thread_1.join
-    not_moving_objects.thread_2.join
-    not_moving_objects.thread_3.join
+    global done
+    done=True
     tilemap_view.game_over_view()
     tilemap_view.clear()
+    done=False
     wait_for_keypress()
     
 
 
 def win():
+    global done
+    done=True
     level_up()
     tilemap_view.game_win_view()
     tilemap_view.clear()
+    done=False
     wait_for_keypress()
 
 def start_game():
-    tilemap.init(43, 28)   #stworz tablice i okno (szerokosc, dlugosc)
+    tilemap.init_from_file("level1.txt")  #stworz tablice i okno (szerokosc, dlugosc)
 
     start_level = tilemap_view.start_view()  #tworzy widok startowy    
 
     stats.load_from_file(level=start_level) #ładuje z pliku parametry levelu
+    nazwa = "level" + str(start_level) + ".txt"
+    tilemap.init_from_file(nazwa)  #stworz tablice i okno (szerokosc, dlugosc)
 
     tilemap_objects.init() #stworzyc obiekty na mapie
 

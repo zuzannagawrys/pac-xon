@@ -12,12 +12,23 @@ class Ghost(MovingObject, ABC):
         super().__init__(img)
         self.id = -1    #nowa wlasciwosc duszka id
         self.speed = 3 #predkosc duszka 3
-        self.x = randint(5, tilemap.WIDTH - 5) * tilemap.TILE_SIZE + 0.5 * tilemap.TILE_SIZE #ustawienie pozycji duszka na dowolnym miejscu planszy x
-        self.y = randint(5, tilemap.HEIGHT - 5) * tilemap.TILE_SIZE + 0.5 * tilemap.TILE_SIZE   #ustawienie pozycji duszka na dowolnym miejscu planszy y
+        self.starting_position()
         self.x_vec = choice([-1, 1])    # strona w ktora sie porusza w poziomie
         self.y_vec = choice([-1, 1])    # strona w ktora sie porusza w pionie
         self.x_ind = tilemap.row_num(self.x)    #pozycja x w kratkach
         self.y_ind = tilemap.col_num(self.y)    #pozycja y w kratkach
+
+    def starting_position(self):
+        while(True):
+            indx= randint(5,tilemap.WIDTH - 5)
+            x=indx* tilemap.TILE_SIZE + 0.5 * tilemap.TILE_SIZE  # ustawienie pozycji duszka na dowolnym miejscu planszy x
+            indy=randint(5,tilemap.HEIGHT - 5)
+            y = indy * tilemap.TILE_SIZE + 0.5 * tilemap.TILE_SIZE  # ustawienie pozycji duszka na dowolnym miejscu planszy y
+            if tilemap.tile_map[indy][indx]==0:
+                self.x=x
+                self.y=y
+                return
+
 
     def check_move(self):
         x_ind = tilemap.row_num(self.x + self.img_width / 2) 
@@ -53,27 +64,27 @@ class Ghost(MovingObject, ABC):
 
 
 
-class BlueGhost(Ghost):
+class PinkGhost(Ghost):
     """Podstawowy duszek"""
-    def __init__(self, img='images/blue_ghost.png'):
+    def __init__(self, img='images/pink_ghost.png'):
         super().__init__(img)
 
     def check_collision(self):
         # natepne pole w poziomie
-        if tilemap.tile_map[self.y_ind][self.x_ind + self.x_vec] > 0:
+        if tilemap.tile_map[self.y_ind][self.x_ind + self.x_vec] > 0 or tilemap.tile_map[self.y_ind][self.x_ind + self.x_vec]==-2:
             return self.x_vec, 0
         # nastepne pole w pionie
-        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind] > 0:
+        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind] > 0 or tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind]==-2:
             return 0, self.y_vec
         # nastepny rog
-        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] > 0:
+        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] > 0 or tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec]== -2:
             return self.x_vec, self.y_vec
         else:
             return ()
 
     def handle_collision(self, colliding_vec):
         x_col, y_col = colliding_vec #wektory ktore koliduja
-        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [1, 2]: #jezeli nastepne pole jest sciana
+        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [1, 2, -2]: #jezeli nastepne pole jest sciana
             # zmien kierunek poruszania sie
             if x_col:
                 self.x_vec = -self.x_vec
@@ -84,10 +95,11 @@ class BlueGhost(Ghost):
         if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [11, 12, 13, 14]: #jezeli nastepne pole jest owockiem zniszcz go
             tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] = 0
 
-class RedGhost(BlueGhost):
+class RedGhost(PinkGhost):
     """Duszek zjadający bezpieczne pola gracza"""
     def __init__(self):
-        super().__init__('images/red_ghost.png')
+        super().__init__('images/redd_ghost.png')
+        self.speed=2;
 
     def handle_collision(self, colliding_vec):
         x_col, y_col = colliding_vec
@@ -99,7 +111,7 @@ class RedGhost(BlueGhost):
                 self.y_vec = -self.y_vec
             # znisz bezbieczne pola gracza z ktorymi sie zderzasz
             tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] = 0
-        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] == 2: #jezeli zderzasz sie z krawedziami mapy
+        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [2,-2]: #jezeli zderzasz sie z krawedziami mapy
             # zmien kierunek poruszania sie
             if x_col:
                 self.x_vec = -self.x_vec
@@ -111,10 +123,10 @@ class RedGhost(BlueGhost):
             tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] = 0
 
 
-class GreenGhost(Ghost):
+class OrangeGhost(Ghost):
     """Duszek poruszający się wzdłuż pól gracza"""
     def __init__(self):
-        super().__init__('images/green_ghost.png')
+        super().__init__('images/oorange_ghost.png')
         self.x_ind = tilemap.WIDTH - 2
         self.y_ind = tilemap.HEIGHT - 2
         self.x_vec = choice([-1, 0])
@@ -124,7 +136,7 @@ class GreenGhost(Ghost):
         self.changed_dir = 0
 
     def check_collision(self):
-        if tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] > 0: #jezeli prze duszkiem jest przeszkoda
+        if tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] > 0 or tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] ==-2: #jezeli przed duszkiem jest przeszkoda
             return self.x_vec, self.y_vec
         elif not self.changed_dir and tilemap.tile_map[self.y_ind - self.x_vec][self.x_ind + self.y_vec] == 0: #jeżeli pod duszkiem nie ma pol gracza
             return self.y_vec, -self.x_vec
@@ -143,7 +155,7 @@ class GreenGhost(Ghost):
                 self.x_vec = self.y_vec
                 self.y_vec = 0
             self.changed_dir = 1
-        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [1, 2]:
+        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [1, 2, -2]:
             # zmien kierunek poruszania sie
             if x_col:
                 self.y_vec = self.x_vec
@@ -158,10 +170,10 @@ class GreenGhost(Ghost):
 
 
 
-class OrangeGhost(Ghost):
+class BlueGhost(Ghost):
     """Duszek poruszający sie w bezpiecznych obszarach gracza"""
     def __init__(self, x_ind, y_ind):
-        super().__init__('images/orange_ghost.png')
+        super().__init__('images/light_blue_ghost.png')
         self.id = 4
         self.x_ind = x_ind
         self.y_ind = y_ind
@@ -169,18 +181,18 @@ class OrangeGhost(Ghost):
         self.y = y_ind * tilemap.TILE_SIZE + 0.5 * tilemap.TILE_SIZE
     #odbija sie od krawedzi pustych przestrzeni i krawedzi planszy
     def check_collision(self):
-        if tilemap.tile_map[self.y_ind][self.x_ind + self.x_vec] in [0, 2]:
+        if tilemap.tile_map[self.y_ind][self.x_ind + self.x_vec] in [0, 2, -2]:
             return self.x_vec, 0
-        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind] in [0, 2]:
+        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind] in [0, 2, -2]:
             return 0, self.y_vec
-        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] in [0, 2]:
+        elif tilemap.tile_map[self.y_ind + self.y_vec][self.x_ind + self.x_vec] in [0, 2, -2]:
             return self.x_vec, self.y_vec
         else:
             return ()
 
     def handle_collision(self, colliding_vec):
         x_col, y_col = colliding_vec
-        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [0, 2]:
+        if tilemap.tile_map[self.y_ind + y_col][self.x_ind + x_col] in [0, 2, -2]:
             # zmien kierunek poruszania sie
             if x_col:
                 self.x_vec = -self.x_vec

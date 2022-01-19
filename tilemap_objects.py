@@ -9,24 +9,24 @@ import not_moving_objects
 player = None
 objects = list()
 
-orange_ghosts_num = 0
+blue_ghosts_num = 0
 
 
 def init():
-    global orange_ghosts_num, player
+    global blue_ghosts_num, player
 
     player = pacman.Pacman() #stworzenie pacmana gracza
 
-    for i in range(stats.blue_ghosts_num): #stworzenie niebieskich duszkow (podstawowe)
-        objects.append(ghost.BlueGhost())   #dodanie duszka do listy obiektow
+    for i in range(stats.pink_ghosts_num): #stworzenie niebieskich duszkow (podstawowe)
+        objects.append(ghost.PinkGhost())   #dodanie duszka do listy obiektow
 
     for i in range(stats.red_ghosts_num):   #stworzenie czerwonych duszkow (jedzące pola gracza)
         objects.append(ghost.RedGhost())    #dodanie duszka do listy obiektow
 
-    for i in range(stats.green_ghosts_num): #stworzenie zielonych duszkow (poruszajace sie wzdluż krawedzi)
-        objects.append(ghost.GreenGhost())  #dodanie duszka do listy obiektow
+    for i in range(stats.orange_ghosts_num): #stworzenie zielonych duszkow (poruszajace sie wzdluż krawedzi)
+        objects.append(ghost.OrangeGhost())  #dodanie duszka do listy obiektow
 
-    orange_ghosts_num = stats.orange_ghosts_num #ustawienie globalnie liczby pomaranczowych duchow
+    blue_ghosts_num = stats.blue_ghosts_num #ustawienie globalnie liczby pomaranczowych duchow
 
     not_moving_objects.start_fruit_thread() #zaczac watek tworzenia owockow
 
@@ -38,15 +38,15 @@ def action():
         o.action() #metoda wywolywana z moving_objects
 
 
-def add_orange_ghost(pos): #dodaje pomaranczowego duszka jezeli ma byc dodany
-    global orange_ghosts_num
+def add_blue_ghost(pos): #dodaje pomaranczowego duszka jezeli ma byc dodany
+    global blue_ghosts_num
 
-    if orange_ghosts_num > 0:
+    if blue_ghosts_num > 0:
         y_ind, x_ind = pos[0]
         if tilemap.tile_map[y_ind][x_ind] != 1:
             return
-        objects.append(ghost.OrangeGhost(x_ind, y_ind))
-        orange_ghosts_num -= 1
+        objects.append(ghost.BlueGhost(x_ind, y_ind))
+        blue_ghosts_num -= 1
 
 
 def check_win_decorator(function):
@@ -80,7 +80,7 @@ def kill_player(): #
     stats.player_lives -= 1 
 
 def clear():
-    global player, objects, orange_ghosts_num
+    global player, objects, blue_ghosts_num
     player = None
     del objects[:]
 
@@ -97,3 +97,24 @@ def set_ghost_speed(speed):
                 if o.x % tilemap.TILE_SIZE == 0 and o.y % tilemap.TILE_SIZE == 0:
                     o.set_speed(speed)
                     break
+
+def set_normal_ghost_speed():
+    for o in objects:
+            while True:
+                if o.x % tilemap.TILE_SIZE == 0 and o.y % tilemap.TILE_SIZE == 0:
+                    if isinstance(o,ghost.RedGhost):
+                        o.set_speed(2)
+                    else:
+                        o.set_speed(3)
+                    break
+def set_ghost_speed_0():
+    for o in objects:
+        o.set_speed(0)
+
+
+def set_normal_ghost_speed_0():
+    for o in objects:
+        if isinstance(o,ghost.RedGhost):
+            o.set_speed(2)
+        else:
+            o.set_speed(3)

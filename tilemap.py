@@ -5,6 +5,7 @@ import numpy
 from scipy.ndimage import label
 import control
 import tilemap_objects
+import stats
 
 TILE_SIZE = 24
 tile_map = []
@@ -83,12 +84,13 @@ def mark_area():
 
                 for (x, y) in labeled_list: #oznaczamy na mapie obszar jako bezpieczny
                     tile_map[x][y] = 1
-                tilemap_objects.add_orange_ghost(random.sample(labeled_list, 1)) #dodaje pomaranczowego duszka jezeli ma byc dodany
+                tilemap_objects.add_blue_ghost(random.sample(labeled_list, 1)) #dodaje niebieskiego duszka jezeli ma byc dodany
 
 
 def clear():
     global tile_map
     tile_map = None
-    init(WIDTH, HEIGHT)
+    nazwa = "level"+str(stats.this_level)+".txt"
+    init_from_file(nazwa)
     tilemap_objects.clear()
     tilemap_objects.init()

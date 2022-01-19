@@ -51,6 +51,17 @@ class Pacman(MovingObject):
             elif x_ind == tilemap.WIDTH - 1:
                 self.x_vec = min(0, self.x_vec)
 
+        if tilemap.tile_map[self.y_ind+self.y_vec][self.x_ind+self.x_vec] == -2:
+            if self.y_vec < 0:
+                self.y_vec = max(0, self.y_vec)
+            else:
+                self.y_vec = min(0, self.y_vec)
+            if self.x_vec <0:
+                self.x_vec = max(0, self.x_vec)
+            else:
+                self.x_vec = min(0, self.x_vec)
+
+
         # jezeli pacman zjadl owoc
         if tilemap.tile_map[self.y_ind][self.x_ind] in [11, 12, 13, 14]:
             not_moving_objects.fruit_action(tilemap.tile_map[self.y_ind][self.x_ind])

@@ -5,17 +5,18 @@ import time
 
 
 textures = {
-    14: pygame.image.load('images/apple.png'),      # apple fruit
-    13: pygame.image.load('images/sherry.png'),     # sherry fruit
-    12: pygame.image.load('images/green.png'),      # green fruit
-    11: pygame.image.load('images/lemon.png'),      # lemon fruit
+    14: pygame.image.load('images/peach.png'),      # peach fruit slowing ghosts
+    13: pygame.image.load('images/strawberry.png'),     # strawberry fruit freezing ghosts
+    12: pygame.image.load('images/banana.png'),      # banana adding speed to pacman
+    11: pygame.image.load('images/lemon.png'),      # lemon fruit slowing pacman down
     5: pygame.image.load('images/upper_bar.png'),   # statistics
     4: pygame.image.load('images/occ.png'),         # orange ghost
     3: pygame.image.load('images/marked.png'),      # pacman trace
     2: pygame.image.load('images/occ.png'),         # frame of a map
     1: pygame.image.load('images/occ.png'),         # occupied field
     0: pygame.image.load('images/free.png'),        # free field
-    -1: pygame.image.load('images/free.png')        # blue / red / green ghost
+    -1: pygame.image.load('images/free.png'),        # blue / red / green ghost
+    -2: pygame.image.load('images/wall.png')        #wall
 }
 
 
@@ -30,9 +31,9 @@ def draw_map():
             tilemap.screen.blit(textures[tilemap.tile_map[row][column]], (column * tilemap.TILE_SIZE, row * tilemap.TILE_SIZE)) #umiesc obrazek na oknie w danych wspolrzednych
 
 
-heart_red = pygame.image.load('images/heart.png')
+heart_red = pygame.image.load('images/heart1.png')
 heart_blue = pygame.image.load('images/heart_blue.png')
-logo = pygame.image.load('images/logo.png')
+logo = pygame.image.load('images/logo2.png')
 
 
 def draw_bar():
@@ -63,12 +64,12 @@ def start_view():
     tilemap.screen.blit(dark, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)  #dodaj obraz ciemnego koloru do ekranu
 
     #logo
-    logo = pygame.image.load('images/logo_huge.png') #stworzenie obrazu loga
+    logo = pygame.image.load('images/logo_huge2.png') #stworzenie obrazu loga
     w, h = logo.get_size() #szerokosc i wysokosc loga
 
     # tekst
-    font = pygame.font.SysFont("Ariel", 36)  #ustawienie czcionki
-    font.set_bold(True) #pogrubiona czcionka
+    font = pygame.font.SysFont("Impact", 40)  #ustawienie czcionki
+    #font.set_bold(True) #pogrubiona czcionka
     text = font.render("CHOOSE LEVEL", True, (249, 166, 2)) #napis kolor
     text_x = tilemap.WIDTH * tilemap.TILE_SIZE / 2 - text.get_rect().width / 2 #wspolrzedna x choose level
     text_y = tilemap.HEIGHT * tilemap.TILE_SIZE * 0.65 #wspolrzedna y choose level
@@ -78,8 +79,8 @@ def start_view():
     # guziki
     NUM_OF_BUTTONS = 6
     BUTTON_SIZE = 35
-    BUTTON_COLOR = (0,0,182)
-    BUTTON_SELECTED_COLOR = (124, 221, 255)
+    BUTTON_COLOR = (14,60,182)
+    BUTTON_SELECTED_COLOR = (15, 50, 60)
     GOLD = (249, 166, 2)
     BUTTON_Y = int(tilemap.HEIGHT * tilemap.TILE_SIZE * 0.85)
     BUTTON_X = int((tilemap.WIDTH * tilemap.TILE_SIZE / 2) - ((NUM_OF_BUTTONS - 1) / 2) * 4 * BUTTON_SIZE)
@@ -144,9 +145,9 @@ def game_over_view():
     tilemap.screen.blit(dark, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 
     # write GAME OVER in the center
-    font = pygame.font.SysFont("comicsansms", 72)
+    font = pygame.font.SysFont("Ariel", 100)
     font.set_bold(True)
-    text = font.render("GAME OVER", True, (249, 166, 2))
+    text = font.render("GAME OVER", True, (249, 0,0))
     text_x = tilemap.WIDTH * tilemap.TILE_SIZE / 2 - text.get_rect().width / 2
     text_y = tilemap.HEIGHT * tilemap.TILE_SIZE / 2 - text.get_rect().height / 2
     tilemap.screen.blit(text, (text_x, text_y))
@@ -165,7 +166,7 @@ def game_win_view():
     tilemap.screen.blit(dark, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 
     # write GAME OVER in the center
-    font = pygame.font.SysFont("comicsansms", 72)
+    font = pygame.font.SysFont("Ariel", 100)
     font.set_bold(True)
     text = font.render("LEVEL UP", True, (249, 166, 2))
     text_x = tilemap.WIDTH * tilemap.TILE_SIZE / 2 - text.get_rect().width / 2

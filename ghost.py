@@ -99,7 +99,7 @@ class RedGhost(PinkGhost):
     """Duszek zjadający bezpieczne pola gracza"""
     def __init__(self):
         super().__init__('images/redd_ghost.png')
-        self.speed=2;
+        self.speed=2
 
     def handle_collision(self, colliding_vec):
         x_col, y_col = colliding_vec
